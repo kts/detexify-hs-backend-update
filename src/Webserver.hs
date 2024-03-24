@@ -103,18 +103,22 @@ main = do
       let eitherJson = validate $ JSON.eitherDecode $ d
       train c eitherJson id
 
-    enableSnapshot <- liftIO $ tryJust (guard . isDoesNotExistError) $ getEnv "ENABLESNAPSHOT"
-    when (isRight enableSnapshot) $ do
+--
+-- I was getting an error about 'liftIO' here. I'm not using 'snapshot' stuff, so just comment-out for now:
+--
 
-      post "/save-snapshot" $ do
-        liftIO $ snapshot c
-        jsonmessage "Snapshotted."
+--    enableSnapshot <- liftIO $ tryJust (guard . isDoesNotExistError) $ getEnv "ENABLESNAPSHOT"
+--    when (isRight enableSnapshot) $ do
 
-      post "/load-snapshot" $ do
-        success <- liftIO $ loadSuccess c
-        case success of
-          True -> jsonmessage "Loaded"
-          False -> jsonmessage "No. Just no."
+--      post "/save-snapshot" $ do
+--        liftIO $ snapshot c
+--        jsonmessage "Snapshotted."
+
+--      post "/load-snapshot" $ do
+--        success <- liftIO $ loadSuccess c
+--        case success of
+--          True -> jsonmessage "Loaded"
+--          False -> jsonmessage "No. Just no."
 
 snapshotJsonFile = "snapshot.json"
 
@@ -130,7 +134,7 @@ load c = do
     Nothing -> return ()
     Just snapshot -> atomically $ (writeTVar (samples c) snapshot)
 
-loadSuccess c = load c >> return True `catch` handle where
+loadSuccess c = load c >> return True `Control.Exception.catch` handle where
   handle :: IOError -> IO Bool
   handle e
     | isDoesNotExistError e = return False

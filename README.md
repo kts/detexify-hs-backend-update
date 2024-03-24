@@ -1,3 +1,19 @@
+
+# kts update
+
+* made to run on my laptop,
+
+```
+macOS 13.5.2
+
+$ cabal --version
+cabal-install version 3.10.2.1
+compiled using version 3.10.2.1 of the Cabal library
+
+$ ghc --version
+The Glorious Glasgow Haskell Compilation System, version 9.4.8
+```
+
 # Detexify Backend Server implemented in Haskell
 
 ## Requirements
